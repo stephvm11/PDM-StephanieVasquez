@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -23,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,16 +54,27 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Listado(modifier: Modifier = Modifier) {
-    val listado = mutableListOf<String>("")
-    val nombre: MutableState<String> = remember { mutableStateOf("") }
-    Column() {
-        Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    val listado = remember { mutableStateListOf<String>() }
+    val nombre = remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .weight(1f), contentAlignment = Alignment.Center) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 TextField(
                     value = nombre.value,
                     onValueChange = {
                         nombre.value = it
                     },
+                    modifier = Modifier.fillMaxWidth(),
                     maxLines = 1,
                     minLines = 1,
                     singleLine = true,
@@ -77,18 +91,28 @@ fun Listado(modifier: Modifier = Modifier) {
                 )
                 Button(
                     onClick = {
-                        listado.add(nombre.toString())
-                    }
+                        if (nombre.value.isNotBlank()) {
+                            listado.add(nombre.value)
+                            nombre.value = ""
+                        }
+                    },
+                    modifier = Modifier.padding(top = 8.dp)
                 ) { Text(text = "Guardar") }
             }
 
         }
-        Box( modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-            Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .weight(1f), contentAlignment = Alignment.Center) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = "Listado de nombres y posición en la lista",
                     textAlign = TextAlign.Left,
-                    modifier = Modifier.weight(2f)
+                    modifier = Modifier.weight(1f)
                 )
                 Button(
                     onClick = {
@@ -98,24 +122,26 @@ fun Listado(modifier: Modifier = Modifier) {
                 ) { Text("Limpiar") }
             }
         }
-        Box(modifier = Modifier.fillMaxSize().weight(3f), contentAlignment = Alignment.Center){
-
-            Column( modifier = Modifier
-                .height(200.dp)
-                .padding(10.dp).background(Color.White),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
-                val entries: List<String> = listado
-                LazyColumn() {
-                    itemsIndexed(entries.toList()) { index, item ->
-                        Row( modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(
-                                text = item
-                            )
-                            Text(
-                                text = (index + 1).toString()
-                            )
-                        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(3.dp, Color.Blue, RoundedCornerShape(5.dp)).weight(3f).background(Color.White, RoundedCornerShape(5.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                itemsIndexed(listado) { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = item
+                        )
+                        Text(
+                            text = (index + 1).toString()
+                        )
                     }
                 }
             }
@@ -125,11 +151,10 @@ fun Listado(modifier: Modifier = Modifier) {
 }
 
 
-
-    @Preview(showBackground = true)
-    @Composable
-    fun ListadoPreview() {
-        SAVMCUATROTheme {
-            Listado()
-        }
+@Preview(showBackground = true)
+@Composable
+fun ListadoPreview() {
+    SAVMCUATROTheme {
+        Listado()
     }
+}
