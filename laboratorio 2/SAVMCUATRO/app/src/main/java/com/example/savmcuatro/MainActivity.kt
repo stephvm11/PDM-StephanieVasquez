@@ -56,97 +56,104 @@ class MainActivity : ComponentActivity() {
 fun Listado(modifier: Modifier = Modifier) {
     val listado = remember { mutableStateListOf<String>() }
     val nombre = remember { mutableStateOf("") }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .weight(1f), contentAlignment = Alignment.Center) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextField(
-                    value = nombre.value,
-                    onValueChange = {
-                        nombre.value = it
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 1,
-                    minLines = 1,
-                    singleLine = true,
-                    placeholder = { Text("Nombre") },
-                    isError = false,
-                    keyboardActions = KeyboardActions(
-                        onNext = {},
-                        onDone = {},
-                        onGo = {},
-                        onPrevious = {},
-                        onSearch = {},
-                        onSend = {}
-                    ),
-                )
-                Button(
-                    onClick = {
-                        if (nombre.value.isNotBlank()) {
-                            listado.add(nombre.value)
-                            nombre.value = ""
-                        }
-                    },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) { Text(text = "Guardar") }
-            }
 
-        }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .weight(1f), contentAlignment = Alignment.Center) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Listado de nombres y posición en la lista",
-                    textAlign = TextAlign.Left,
-                    modifier = Modifier.weight(1f)
-                )
-                Button(
-                    onClick = {
-                        listado.clear()
-                    },
-                    modifier = Modifier.weight(1f)
-                ) { Text("Limpiar") }
-            }
-        }
-        Box(
+    Scaffold() { paddingValues ->
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .border(3.dp, Color.Blue, RoundedCornerShape(5.dp)).weight(3f).background(Color.White, RoundedCornerShape(5.dp)),
-            contentAlignment = Alignment.Center
+                .fillMaxSize().padding(paddingValues)
+                .padding(30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                itemsIndexed(listado) { index, item ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = item
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f), contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextField(
+                        value = nombre.value,
+                        onValueChange = {
+                            nombre.value = it
+                        },
+                        modifier = Modifier.fillMaxWidth().padding(top=10.dp),
+                        maxLines = 1,
+                        minLines = 1,
+                        singleLine = true,
+                        placeholder = { Text("Nombre") },
+                        isError = false,
+                        keyboardActions = KeyboardActions(
+                            onNext = {},
+                            onDone = {},
+                            onGo = {},
+                            onPrevious = {},
+                            onSearch = {},
+                            onSend = {}
                         )
-                        Text(
-                            text = (index + 1).toString()
-                        )
+                    )
+                    Button(
+                        onClick = {
+                            if (nombre.value.isNotBlank()) {
+                                listado.add(nombre.value)
+                                nombre.value = ""
+                            }
+                        },
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) { Text(text = "Guardar") }
+                }
+
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f), contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Listado de nombres y posición en la lista",
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.weight(1f).padding(end = 35.dp)
+                    )
+                    Button(
+                        onClick = {
+                            listado.clear()
+                        }
+                    ) { Text("Limpiar") }
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(3.dp, Color.Blue, RoundedCornerShape(5.dp)).weight(4f)
+                    .background(Color.White, RoundedCornerShape(5.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    itemsIndexed(listado) { index, item ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = item
+                            )
+                            Text(
+                                text = (index + 1).toString()
+                            )
+                        }
                     }
                 }
             }
-        }
 
+        }
     }
 }
 
